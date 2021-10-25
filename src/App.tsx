@@ -1,11 +1,21 @@
+import { Container } from "@mui/material";
+import axios from "axios";
 
-import React from 'react';
-import './App.css';
+import { baseUrl } from "helpers/constants";
+import Users from "pages/users/Users";
+import Navbar from "components/Navbar";
+import "./App.css";
 
 function App() {
+  axios.defaults.baseURL = baseUrl;
+
   return (
     <div className="App">
-      Welcome to React CRUD App
+      <Navbar />
+
+      <Container>
+        <Users />
+      </Container>
     </div>
   );
 }
