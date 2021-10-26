@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { Alert, Modal, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectUsers, updateUser } from "redux/users/userSlice";
+import { resetEditStatus, selectUsers, updateUser } from "redux/users/userSlice";
 import { modalStyle } from "./customStyles";
 import { User } from "types/user";
 import UserForm from "./UserForm";
@@ -21,6 +21,7 @@ const EditUserModal = ({ open, handleClose, user }: PropTypes) => {
 
   useEffect(() => {
     if (users.updateStatus === "success") {
+      dispatch(resetEditStatus());
       handleClose();
     }
 

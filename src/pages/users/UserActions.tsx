@@ -32,7 +32,7 @@ const UserActions = ({ user }: PropType) => {
 
   return (
     <>
-      <EditUserModal open={editOpen} handleClose={toggleEditOpen} user={user} />
+      {editOpen && <EditUserModal open={editOpen} handleClose={toggleEditOpen} user={user} />}
       <DeleteUserPopup open={deleteOpen} toggle={toggleDeleteConfirm} user={user} confirm={handleDelete} />
 
       <Stack direction="row" spacing={2}>

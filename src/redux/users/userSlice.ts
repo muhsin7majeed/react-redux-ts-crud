@@ -47,7 +47,11 @@ export const updateUser = createAsyncThunk("users/updateUser", async (user: User
 export const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    resetEditStatus: (state) => {
+      state.updateStatus = "idle";
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -111,8 +115,12 @@ export const userSlice = createSlice({
 
         state.value.data.forEach((u) => {
           if (u.id === action.payload.id) {
-            console.log(u, action.payload);
-            u = action.payload;
+            const { avatar, email, first_name, last_name } = action.payload;
+
+            u.first_name = first_name;
+            u.last_name = last_name;
+            u.email = email;
+            u.avatar = avatar;
           }
         });
       })
@@ -121,6 +129,8 @@ export const userSlice = createSlice({
       });
   },
 });
+
+export const { resetEditStatus } = userSlice.actions;
 
 export const selectUsers = (state: RootState) => state.users;
 

@@ -5,6 +5,7 @@ import { getUsers, selectUsers } from "redux/users/userSlice";
 import User from "./User";
 import { Box } from "@mui/system";
 import AddUserModal from "./AddUserModal";
+import NoData from "components/NoData";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -37,19 +38,23 @@ const Users = () => {
         </Button>
       </Box>
 
+      {users.status !== "loading" && !users.value && <NoData message="Something went wrong" />}
+
       {users.value && (
         <>
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
             {users.value.data.map((u) => (
               <User key={u.id} user={u} />
             ))}
+
+            {!users.value.data.length && <NoData message="No Users Found!" />}
           </List>
 
           <Pagination count={users.value.total_pages} onChange={handlePageChange} />
-
-          {users.status === "loading" && <LinearProgress />}
         </>
       )}
+
+      {users.status === "loading" && <LinearProgress />}
     </div>
   );
 };
