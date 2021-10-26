@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { Alert, Modal, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectUsers, addUser } from "redux/users/userSlice";
+import { selectUsers, updateUser } from "redux/users/userSlice";
 import { modalStyle } from "./customStyles";
 import { User } from "types/user";
 import UserForm from "./UserForm";
@@ -11,36 +11,37 @@ import UserForm from "./UserForm";
 interface PropTypes {
   open: boolean;
   handleClose: any;
+  user: User;
 }
 
-const AddUserModal = ({ open, handleClose }: PropTypes) => {
+const EditUserModal = ({ open, handleClose, user }: PropTypes) => {
   const dispatch = useDispatch();
 
   const users = useSelector(selectUsers);
 
   useEffect(() => {
-    if (users.createStatus === "success") {
+    if (users.updateStatus === "success") {
       handleClose();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [users.createStatus]);
+  }, [users.updateStatus]);
 
   function handleSubmit(value: any) {
     const { firstName, lastName, email, avatar } = value;
 
-    const user: User = {
-      id: (users.value?.total || 0) + 1,
+    const userValue: User = {
+      id: user.id,
       first_name: firstName,
       last_name: lastName,
       email,
       avatar,
     };
 
-    dispatch(addUser(user));
+    dispatch(updateUser(userValue));
   }
 
-  const initialValues = { firstName: "", lastName: "", email: "", avatar: "" };
+  const initialValues = { firstName: user.first_name, lastName: user.last_name, email: user.email, avatar: "" };
 
   return (
     <>
@@ -52,16 +53,16 @@ const AddUserModal = ({ open, handleClose }: PropTypes) => {
       >
         <Box sx={modalStyle}>
           <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
-            Add a new user
+            Update user {user.first_name} {user.last_name}
           </Typography>
 
           <UserForm
             onSubmit={handleSubmit}
             initialValues={initialValues}
-            loading={Boolean(users.createStatus === "loading")}
+            loading={Boolean(users.updateStatus === "loading")}
           />
 
-          {users.createStatus === "failed" && (
+          {users.updateStatus === "failed" && (
             <Alert sx={{ mt: 3 }} severity="error">
               Something went wrong
             </Alert>
@@ -72,4 +73,4 @@ const AddUserModal = ({ open, handleClose }: PropTypes) => {
   );
 };
 
-export default AddUserModal;
+export default EditUserModal;

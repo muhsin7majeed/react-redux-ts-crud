@@ -1,5 +1,6 @@
 import { ErrorMessage, Form, Formik } from "formik";
 import { Avatar, Badge, Button, FormHelperText, Icon, IconButton, Input, TextField } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { userSchema } from "helpers/validators/user.validator";
 import userImage from "assets/images/profile.jpg";
@@ -7,9 +8,10 @@ import userImage from "assets/images/profile.jpg";
 interface PropTypes {
   initialValues: any;
   onSubmit: any;
+  loading: boolean;
 }
 
-const UserForm = ({ initialValues, onSubmit }: PropTypes) => {
+const UserForm = ({ initialValues, onSubmit, loading }: PropTypes) => {
   return (
     <Formik initialValues={initialValues} validationSchema={userSchema} onSubmit={onSubmit}>
       {({ errors, values, handleChange, setFieldValue, setFieldTouched }) => (
@@ -75,8 +77,8 @@ const UserForm = ({ initialValues, onSubmit }: PropTypes) => {
             helperText={<ErrorMessage name="email" />}
           />
 
-          <Button type="submit" variant="contained" endIcon={<Icon>send</Icon>}>
-            Submit
+          <Button type="submit" variant="contained" endIcon={loading ? null : <Icon>send</Icon>}>
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Submit"}
           </Button>
         </Form>
       )}

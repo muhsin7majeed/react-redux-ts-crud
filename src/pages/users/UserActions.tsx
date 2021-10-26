@@ -1,30 +1,50 @@
-import { Collapse, Icon, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { useState } from "react";
+import { Button } from "@material-ui/core";
+import { Icon, Stack } from "@mui/material";
+
+import { useDispatch } from "react-redux";
+import { deleteUser } from "redux/users/userSlice";
+import { User } from "types/user";
+import EditUserModal from "./EditUserModal";
+import DeleteUserPopup from "./DeleteUserPopup";
 
 interface PropType {
-  open: boolean;
+  user: User;
 }
 
-const UserActions = ({ open }: PropType) => {
+const UserActions = ({ user }: PropType) => {
+  const dispatch = useDispatch();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+
+  function handleDelete() {
+    dispatch(deleteUser(user.id));
+  }
+
+  function toggleDeleteConfirm() {
+    setDeleteOpen(!deleteOpen);
+  }
+
+  function toggleEditOpen() {
+    setEditOpen(!editOpen);
+  }
+
   return (
-    <Collapse in={open} timeout="auto" unmountOnExit>
-      <List component="div" disablePadding>
-        <ListItemButton sx={{ pl: 4 }}>
-          <ListItemText primary="Edit" />
+    <>
+      <EditUserModal open={editOpen} handleClose={toggleEditOpen} user={user} />
+      <DeleteUserPopup open={deleteOpen} toggle={toggleDeleteConfirm} user={user} confirm={handleDelete} />
 
-          <ListItemIcon>
-            <Icon>edit</Icon>
-          </ListItemIcon>
-        </ListItemButton>
+      <Stack direction="row" spacing={2}>
+        <Button variant="contained" color="primary" endIcon={<Icon>edit</Icon>} onClick={toggleEditOpen}>
+          Edit
+        </Button>
 
-        <ListItemButton sx={{ pl: 4 }}>
-          <ListItemText primary="Delete" />
-
-          <ListItemIcon>
-            <Icon>delete</Icon>
-          </ListItemIcon>
-        </ListItemButton>
-      </List>
-    </Collapse>
+        <Button variant="contained" color="secondary" endIcon={<Icon>delete</Icon>} onClick={toggleDeleteConfirm}>
+          Delete
+        </Button>
+      </Stack>
+    </>
   );
 };
 
